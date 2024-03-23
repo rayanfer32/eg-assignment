@@ -1,8 +1,8 @@
 export default function Loader({ message }: { message?: string }) {
   return (
-    <div className="text-xl p-4 flex flex-col h-screen justify-center items-center">
+    <div className="p-4 flex flex-col gap-2 h-screen justify-center items-center">
       <div className="loader"></div>
-      <div>{message || "Loading..."}</div>
+      <div className="text-lg">{message || "Loading..."}</div>
     </div>
   );
 }
