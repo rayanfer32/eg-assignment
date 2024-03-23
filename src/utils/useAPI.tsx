@@ -1,28 +1,41 @@
-import axios from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
-export default function useAPI(url: string) {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+interface ApiResponse<T> {
+  data: T | null;
+  isLoading: boolean;
+  error: AxiosError | null;
+}
+
+export default function useAPI<T>(url: string): ApiResponse<T> {
+  const [data, setData] = useState<T | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<AxiosError | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
     setIsLoading(true);
+
     axios
       .get(url)
-      .then((response) => {
-        setData(response.data);
-        setIsLoading(false);
+      .then((response: AxiosResponse<T>) => {
+        if (isMounted) {
+          setData(response.data);
+          setIsLoading(false);
+          setError(null);
+        }
       })
-      .catch((error) => {
-        setError(error);
-        setIsLoading(false);
+      .catch((error: AxiosError) => {
+        if (isMounted) {
+          setError(error);
+          setIsLoading(false);
+        }
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, [url]);
 
-  return {
-    data,
-    isLoading,
-    error,
-  };
+  return { data, isLoading, error };
 }
