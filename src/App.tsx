@@ -6,15 +6,15 @@ import Loader from "./components/Loader";
 import Error from "./components/Error";
 
 function App() {
-  const { data, isLoading, error } = useAPI(
+  const { data, isLoading, error } = useAPI<IArticleItem[]>(
     `${BASE_URL}/assignment/articles`
-  ) as unknown as { data: IArticleItem[]; isLoading: boolean; error: object };
+  )
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (!data && error) {
+  if (error) {
     return <Error message="Failed to load the articles!" />;
   }
 

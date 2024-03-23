@@ -22,7 +22,7 @@ export default function ArticleCard({
           className="bg-blue-200 p-3 rounded-full w-fit shadow-md hover:-m-1 hover:p-4 transition-all"
           to={`/article/${id}`}
         >
-          Read more {">"}
+          Read more &rarr;
         </Link>
       </div>
     </div>

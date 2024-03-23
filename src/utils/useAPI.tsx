@@ -21,15 +21,17 @@ export default function useAPI<T>(url: string): ApiResponse<T> {
       .then((response: AxiosResponse<T>) => {
         if (isMounted) {
           setData(response.data);
-          setIsLoading(false);
           setError(null);
         }
       })
       .catch((error: AxiosError) => {
         if (isMounted) {
           setError(error);
-          setIsLoading(false);
+          setData(null);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
 
     return () => {
@@ -37,5 +39,5 @@ export default function useAPI<T>(url: string): ApiResponse<T> {
     };
   }, [url]);
 
-  return { data, isLoading, error };
+  return { data, isLoading, error } as const;
 }

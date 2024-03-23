@@ -13,38 +13,34 @@ export default function Article() {
     data: articleData,
     isLoading,
     error,
-  } = useAPI(
-    `${BASE_URL}/assignment/articles/${routerParams.id}`
-  ) as unknown as {
-    data: IArticle;
-    isLoading: boolean;
-    error: unknown;
-  };
+  } = useAPI<IArticle>(`${BASE_URL}/assignment/articles/${routerParams.id}`);
 
   if (isLoading) {
     return <Loader message="Loading Article..." />;
   }
 
-  if (!articleData && error) {
+  if (error) {
     return <Error message="Failed to load the article!" />;
   }
 
   return (
     <div className="md:p-24 py-8 p-5 w-full h-full min-h-screen bg-slate-100">
       <div className="mb-4">
-      <Link
-        className="bg-white p-3 rounded-lg w-fit shadow-md hover:bg-blue-200 hover:scale-110 transition-all"
-        to={"/"}
-      >
-        &larr; Back
-      </Link>
+        <Link
+          className="bg-white p-3 rounded-lg w-fit shadow-md hover:bg-blue-200 hover:scale-110 transition-all"
+          to={"/"}
+        >
+          &larr; Back
+        </Link>
       </div>
-      <ArticleFullView
-        id={articleData?.id}
-        title={articleData?.title}
-        summary={articleData?.summary}
-        fullText={articleData?.fullText}
-      />
+      {articleData && (
+        <ArticleFullView
+          id={articleData.id}
+          title={articleData.title}
+          summary={articleData.summary}
+          fullText={articleData.fullText}
+        />
+      )}
     </div>
   );
 }
